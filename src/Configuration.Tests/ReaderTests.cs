@@ -12,18 +12,19 @@ namespace Configuration.Tests
     //     public readonly string Description;
     // }
 
-    // public class Jobs {
-    //     public readonly string Path;
+    public class Jobs {
+        // public readonly string Path;
 
-    //     public readonly JobSummary JobSummary;
-    // }
+        // public readonly JobSummary JobSummary;
+    }
 
     public class Configuration {
         public readonly string Source;
-        // public readonly Jobs Jobs;
+        public readonly Jobs Jobs;
 
         public Configuration(IReadConfiguration options) {
             this.Source = options.GetSource();
+            this.Jobs  = options.GetJobs();
         }
     }
 
@@ -47,6 +48,17 @@ namespace Configuration.Tests
             
             this.readConfiguration.Verify(x => x.GetSource(), Times.Once());
             Assert.AreEqual(expectedSource, configuration.Source);
+        }
+
+        [Test]
+        public void ShouldGetJobs() {
+            var expectedJobs = new Jobs();
+            this.readConfiguration.Setup(x => x.GetJobs()).Returns(expectedJobs);
+
+            var configuration = new Configuration(this.readConfiguration.Object);
+
+            this.readConfiguration.Verify(x => x.GetJobs(), Times.Once);
+            Assert.AreEqual(expectedJobs, configuration.Jobs);
         }
     }
 }
